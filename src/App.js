@@ -2,11 +2,22 @@ import React, { useEffect, useState } from 'react';
 
 import Tasks from './components/Tasks/Tasks';
 import NewTask from './components/NewTask/NewTask';
+import useHttp from './hooks/use-http';
 
 function App() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
+  const transformTasks = taskObj => {
+    const loadedTasks = [];
+
+    for (const taskKey in taskObj) {
+      loadedTasks.push({ id: taskKey, text: data[taskKey].text });
+    }
+
+    setTasks(loadedTasks);
+  };
+
+  useHttp({ url: 'https://react-http-6b4a6.firebaseio.com/tasks.json' }, transformTasks)
 
   const fetchTasks = async (taskText) => {
     setIsLoading(true);
@@ -22,13 +33,13 @@ function App() {
 
       const data = await response.json();
 
-      const loadedTasks = [];
+      // const loadedTasks = [];
 
-      for (const taskKey in data) {
-        loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-      }
+      // for (const taskKey in data) {
+      //   loadedTasks.push({ id: taskKey, text: data[taskKey].text });
+      // }
 
-      setTasks(loadedTasks);
+      // setTasks(loadedTasks);
     } catch (err) {
       setError(err.message || 'Something went wrong!');
     }

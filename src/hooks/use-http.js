@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-function useHttp(requestConfig) {
+
+function useHttp(requestConfig, applyData) {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -9,9 +10,9 @@ function useHttp(requestConfig) {
         try {
             const response = await fetch(
                 requestConfig.url, {
-                method: requestConfig.method,
-                headers: requestConfig.headers,
-                body: JSON.stringify(requestConfig.body)
+                method: requestConfig.method ? requestConfig.method : 'GET',
+                headers: requestConfig.headers ? requestConfig.headers : {},
+                body: requestConfig.body ? JSON.stringify(requestConfig.body) : null,
             }
             );
 
@@ -20,20 +21,21 @@ function useHttp(requestConfig) {
             }
 
             const data = await response.json();
-
-            const loadedTasks = [];
-
-            for (const taskKey in data) {
-                loadedTasks.push({ id: taskKey, text: data[taskKey].text });
-            }
-
-            setTasks(loadedTasks);
+            applyData(data)
         } catch (err) {
             setError(err.message || 'Something went wrong!');
         }
         setIsLoading(false);
     };
-
+    return {
+        // isLoading: isLoading,
+        // error: error,
+        // sendRequest: sendRequest
+        //equivalent of 
+        isLoading,
+        error,
+        sendRequest,
+    }
 }
 
 export default useHttp;
