@@ -7,8 +7,6 @@ import useHttp from './hooks/use-http';
 function App() {
   const [tasks, setTasks] = useState([]);
 
-
-
   const { isLoading, error, sendRequest: fetchTasks } = useHttp();
 
   useEffect(() => {
@@ -23,10 +21,10 @@ function App() {
     };
 
     fetchTasks(
-      { url: 'https://react-http-6b4a6.firebaseio.com/tasks.json' },
+      { url: 'https://test-c0808-default-rtdb.firebaseio.com/tasks.json' },
       transformTasks
     );
-  }, []);
+  }, [fetchTasks]);
 
   const taskAddHandler = (task) => {
     setTasks((prevTasks) => prevTasks.concat(task));
